@@ -1,0 +1,44 @@
+[
+    {
+        "handle" : "meridian",
+        "name" : "Steel Meridian",
+        "wiki_url" : "Steel_Meridian",
+        "wiki_id" : 567077,
+        "type" : "power"
+    },
+    {
+        "handle" : "hexis",
+        "name" : "Arbiters of Hexis",
+        "wiki_url" : "Arbiters_of_Hexis",
+        "wiki_id" : 568583,
+        "type" : "power"
+    },
+    {
+        "handle" : "suda",
+        "name" : "Cephalon Suda",
+        "wiki_url" : "Cephalon_Suda",
+        "wiki_id" : 568584,
+        "type" : "power"
+    },
+    {
+        "handle" : "perrin",
+        "name" : "The Perrin Sequence",
+        "wiki_url" : "The_Perrin_Sequence",
+        "wiki_id" : 568587,
+        "type" : "power"
+    },
+    {
+        "handle" : "veil",
+        "name" : "Red Veil",
+        "wiki_url" : "Red_Veil",
+        "wiki_id" : 457553,
+        "type" : "power"
+    },
+    {
+        "handle" : "loka",
+        "name" : "New Loka",
+        "wiki_url" : "New_Loka",
+        "wiki_id" : 568585,
+        "type" : "power"
+    }
+]
