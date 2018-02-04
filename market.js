@@ -1,4 +1,5 @@
-var request = require('request-promise');
+const request = require('request-promise');
+const RpsQue = require('rps-queue');
 
 /**
  * This File is used to interface with the Warframe market API.
@@ -22,6 +23,12 @@ const WF_MARKET_OPTIONS =
     }
 }
 
+// Throtling structure to respect the 3 rps limit on the API
+const requestQue = new RpsQue({
+    requestsPerSecond: 3
+});
+
+
 // The list containing the WF market URLs
 var itemTable = undefined;
 var itemTable_lastUpdate = 0;
@@ -31,7 +38,8 @@ var itemTable_lastUpdate = 0;
  */
 module.exports.fetchItemLookup = async function ()
 {
-    var response = await request(WF_MARKET_API + WF_MARKET_ITEMS, WF_MARKET_OPTIONS);
+    var response = await requestQue.add( () => 
+        request(WF_MARKET_API + WF_MARKET_ITEMS, WF_MARKET_OPTIONS) );
 
     itemTable = JSON.parse(response).payload.items.en;
 
@@ -46,7 +54,7 @@ module.exports.fetchItemLookup = async function ()
 module.exports.getMarketURL = function(itemName)
 {
     if(! itemTable)
-        throw new Error("Item table has not yet been fetched. use fetchItemLookup() to load the table");
+        throw new Error("Item table has not yet been fetched. Call fetchItemLookup() to load the table");
 
     var matchingItem = itemTable.find( item => item.item_name == itemName);
 
