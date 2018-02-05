@@ -1,12 +1,15 @@
-var fs = require('fs');
-var cheerio = require('cheerio');
-var request = require('request-promise');
-var Item = require('./item.js');
+const fs = require('fs');
+const cheerio = require('cheerio');
+const request = require('request-promise');
+const Item = require('./item.js');
+const wfMarket = require('./market.js');
 
 const defaultSyndicates = JSON.parse(fs.readFileSync(__dirname + '/syndicates.json','utf8'));
 
 const WIKI_ROOT = 'http://warframe.wikia.com/wiki/';
 const STANDING_REGEX = /(^\d+(?:,\d{3})*) Standing/;
+const STANDING_NON_DIGIT_REGEX = /\D/;
+const ITEM_NAME_REGEX = /\(.*\)/;
 const SYNDICATE_OFFERING_SELECTOR = '.syn-offer-box';
 const SYNDICATE_OFFERING_STANDING_SELECTOR = '.syn-standing-cost';
 const SYNDICATE_OFFERING_NAME_SELECTOR = '.syn-offer-name';
@@ -29,7 +32,8 @@ class Syndicate
 
     /**
      * Will set the offerings of the syndicate in the offerings member.
-     * This method forces to update from the wiki
+     * This method forces to update from the wiki.
+     * This method does not update prices
      */
     async fetchOfferings()
     {
@@ -56,12 +60,15 @@ class Syndicate
 
             if (itemName && itemStandingCostString)
             {
+                // Remove item name extensions ex: Chromatic Blade (Excalibur) -> Chromatic Blade
+                itemName = itemName.replace(ITEM_NAME_REGEX, '').trim();
+
                 // Compute the standing cost
                 var standingDigits = itemStandingCostString.trimLeft().match(STANDING_REGEX)[1];
-                var standingCost = parseInt(standingDigits.replace(/\D/,''));
+                var standingCost = parseInt(standingDigits.replace(STANDING_NON_DIGIT_REGEX, ''));
 
                 // Adding item to the list
-                tempItemList.push(new Item(itemName.trim(), standingCost));
+                tempItemList.push(new Item(itemName, standingCost));
             }
         });
 
@@ -72,7 +79,48 @@ class Syndicate
         this.offerings_last_update = Date.now();
     }
 
+    /**
+     * This method will update the prices of all items in the syndicate
+     */
+    async fetchPrices()
+    {
+        // Making sure the lookup table is loaded
+        try { wfMarket.getMarketURL(''); }
+        catch(e) { await wfMarket.fetchItemLookup(); }
 
+        var pricePromises = [];
+
+        for (var item of this.offerings)
+        {
+            item.marketURL = wfMarket.getMarketURL(item.name);
+            
+            if (item.marketURL)
+            {
+                var pp = wfMarket.fetchPlatPrice(item.marketURL);
+                pp.then( function(price) {
+                    this.item.setPlatPrice(price);
+                }.bind({item:item}));
+                pricePromises.push(pp);
+            }
+        }
+
+        await Promise.all(pricePromises);
+
+        return this.offerings;
+    }
+
+    /**
+     * This method builds the entire offerings list with prices
+     */
+    async fetchItemsAndPrices()
+    {
+        var offer_p = this.fetchOfferings();
+        var table_p = wfMarket.fetchItemLookup();
+
+        await Promise.all([offer_p, table_p]);
+
+        return this.fetchPrices();
+    }
 }
 
 module.exports = Syndicate;

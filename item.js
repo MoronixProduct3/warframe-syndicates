@@ -5,24 +5,19 @@ class SyndicateItem
     {
         this.name = name;
         this.standingCost = standingCost;
-
         this.marketURL = undefined;
 
-        this.platPrice = platPrice;
-
+        this.platPrice = platPrice || undefined;
         if (this.platPrice != undefined)
-            this.platPrice_last_update = Date.now();
+            this.platPrice_lastUpdate = Date.now();
         else
-            this.platPrice_last_update = 0;
+            this.platPrice_lastUpdate = 0;
     }
 
-    async fetchPlatPrice()
+    setPlatPrice(plat)
     {
-        if (this.marketURL == undefined)
-            return undefined;
-
-
-        this.platPrice_last_update = Date.now();
+        this.platPrice = plat;
+        this.platPrice_lastUpdate = Date.now();
     }
 
     get platPerStanding()
