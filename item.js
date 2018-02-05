@@ -20,6 +20,31 @@ class SyndicateItem
         this.platPrice_lastUpdate = Date.now();
     }
 
+    compareTo(other)
+    {
+        if(! (other instanceof SyndicateItem))
+            throw new Error('Cannot compare SyndicateItem to something else');
+
+        if (this.platPrice == undefined)
+        {
+            if (other.platPrice == undefined)
+                return 0;
+            return -1;
+        }
+        if (this.platPrice == 'no offer')
+        {
+            if (other.platPrice == 'no offer')
+                return 0;
+            return 1;
+        }
+
+        if (other.platPrice == undefined)
+            return 1;
+        if (other.platPrice == 'no offer')
+            return -1;
+        return this.platPerStanding - other.platPerStanding;
+    }
+
     get platPerStanding()
     {
         if (this.platPrice == undefined || this.standingCost == undefined)

@@ -110,16 +110,30 @@ class Syndicate
     }
 
     /**
+     * This method sorts the offerings from best to worst
+     * All of the items with no offers go to the top
+     * The ones that are not tradable go to the bottom
+     */
+    sortOfferings()
+    {
+        this.offerings.sort( (a, b) => b.compareTo(a) );
+    }
+
+    /**
      * This method builds the entire offerings list with prices
      */
-    async fetchItemsAndPrices()
+    async fetchOfferingsAndPrices()
     {
         var offer_p = this.fetchOfferings();
         var table_p = wfMarket.fetchItemLookup();
 
         await Promise.all([offer_p, table_p]);
 
-        return this.fetchPrices();
+        await this.fetchPrices();
+
+        this.sortOfferings();
+
+        return this.offerings;
     }
 }
 
