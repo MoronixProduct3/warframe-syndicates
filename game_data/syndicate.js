@@ -97,9 +97,11 @@ class Syndicate
             if (item.marketURL)
             {
                 var pp = wfMarket.fetchPlatPrice(item.marketURL);
+
                 pp.then( function(price) {
                     this.item.setPlatPrice(price);
                 }.bind({item:item}));
+
                 pricePromises.push(pp);
             }
         }
@@ -134,6 +136,36 @@ class Syndicate
         this.sortOfferings();
 
         return this.offerings;
+    }
+
+    /**
+     * This static method returns an array with a copy of all the syndicates
+     */
+    static getAllSyndicates()
+    {
+        var output = [];
+
+        for (var synd of defaultSyndicates)
+            output.push(new Syndicate(synd.handle));
+
+        return output;
+    }
+
+    /**
+     * This method gets all the syndicates and populates them with prices
+     * This call can take around 3 mins to resolve
+     */
+    static async getAllSyndicatesAndItems()
+    {
+        var syndicates = Syndicate.getAllSyndicates();
+
+        for (var syndi of syndicates)
+        {
+            await syndi.fetchOfferingsAndPrices();
+            console.log("Fetched "+syndi.name);
+        }
+
+        return syndicates;
     }
 }
 
