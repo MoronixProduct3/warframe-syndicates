@@ -60,6 +60,9 @@ module.exports.getMarketURL = function(itemName)
         throw new Error("Item table has not yet been fetched. Call fetchItemLookup() to load the table");
 
     var matchingItem = itemTable.find( item => item.item_name == itemName);
+    // First check for exact match than try to find submatch
+    if (!matchingItem)
+        matchingItem = itemTable.find( item => item.item_name.match(itemName) != null);
 
     if (matchingItem)
         return matchingItem.url_name;
