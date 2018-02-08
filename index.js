@@ -1,9 +1,17 @@
-const Syndicate = require('./syndicate.js');
-const wfMarket = require('./market.js');
+const restify = require('restify');
+const DataCacher = require('./data_cacher');
 
-wfMarket.fetchItemLookup().then( () => 
-{
-    var itemURL = wfMarket.getMarketURL('Telos Akbolto');
+const port = process.env.PORT || 80;
 
-    console.log(itemURL);
+const dataStore = new DataCacher('cache.json', 5);
+
+const server = restify.createServer();
+
+server.get('syndicates', (req, res, next) => {
+    res.send(200, dataStore.data);
+    return next();
+});
+
+server.listen(port, ()=> {
+    console.log(`api is running on port ${port}`);
 });

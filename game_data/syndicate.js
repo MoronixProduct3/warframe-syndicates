@@ -162,7 +162,6 @@ class Syndicate
         for (var syndi of syndicates)
         {
             await syndi.fetchOfferingsAndPrices();
-            console.log("Fetched "+syndi.name);
         }
 
         return syndicates;
