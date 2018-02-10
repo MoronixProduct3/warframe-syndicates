@@ -8,7 +8,10 @@ const dataStore = new DataCacher('cache.json', 5);
 const server = restify.createServer();
 
 server.get('syndicates', (req, res, next) => {
-    res.send(200, dataStore.data);
+    if(dataStore.data)
+        res.send(200, dataStore.data);
+    else
+        res.send(503, 'HTTP 503: Just wait, we are gathering data!');
     return next();
 });
 

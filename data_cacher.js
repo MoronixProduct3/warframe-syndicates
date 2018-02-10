@@ -18,7 +18,7 @@ class DataCacher
         this.filePath = path.resolve(filePath);
         this.updateIntervalMin = updateIntervalMin;
 
-        this._data = {syndicates:[]};
+        this._data = null;
         this._Qdata = null;
 
         // Load syndicates from file if it exists
