@@ -1,0 +1,13 @@
+[Unit]
+Description=Warframe syndicate items API
+After=network.service
+Documentation=https://github.com/MoronixProduct3/warframe-syndicates-api
+
+[Service]
+User=root
+WorkingDirectory=/srv/warframe-syndicates-api
+ExecStart=/usr/bin/node /srv/warframe-syndicates-api/ --harmony
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
