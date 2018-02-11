@@ -74,7 +74,7 @@ module.exports.getMarketURL = function(itemName)
  * This function fetches the current plat price of an item
  * This is computed by averaging the lowest sell prices
  * @param {string} itemURL The URL name of the item to evaluate
- * @param {number} [nbOffers=5] The number of prices to average to get the price
+ * @param {number} [nbOffers=3] The number of prices to average to get the price
  */
 module.exports.fetchPlatPrice = async function (itemURL, nbOffers)
 {
@@ -116,7 +116,7 @@ module.exports.fetchPlatPrice = async function (itemURL, nbOffers)
     orders.sort((a, b) => a.platinum - b.platinum);
 
     if (nbOffers == undefined)
-        nbOffers = 5;
+        nbOffers = 3;
 
     // Mean of the selected offers
     var mean = 0;

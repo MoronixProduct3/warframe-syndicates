@@ -4,7 +4,7 @@ A simple api that gathers the items offered by each syndicate.
 Syndicate items are pulled from the warframe [wiki](http://warframe.wikia.com/).  
 Item prices are obtained from [Warframe Market](https://warframe.market/).
 
-Item prices are an average of the 5 lowest prices of the current online sellers
+Item prices are an average of the 3 lowest prices of the current online sellers
 
 ## API
 To get the current list simply `GET` [http://api.royal-destiny.com:80/syndicates](http://api.royal-destiny.com:80/syndicates)
