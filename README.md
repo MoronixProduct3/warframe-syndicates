@@ -7,7 +7,6 @@ Item prices are obtained from [Warframe Market](https://warframe.market/).
 Item prices are an average of the 3 lowest prices of the current online sellers
 
 ## API
-To get the current list simply `GET` [http://api.royal-destiny.com:80/syndicates](http://api.royal-destiny.com:80/syndicates)
 
 Expected output structure:
 ```json
